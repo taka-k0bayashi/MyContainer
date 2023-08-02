@@ -6,10 +6,16 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyVector", "MyVector\MyVector.vcxproj", "{751B0ADD-4E6C-474D-8D4E-5E0EE3B24ABA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyVectorTest", "MyVectorTest\MyVectorTest.vcxproj", "{6D090175-DE07-479C-BD7A-D0FDD1C23B15}"
+	ProjectSection(ProjectDependencies) = postProject
+		{751B0ADD-4E6C-474D-8D4E-5E0EE3B24ABA} = {751B0ADD-4E6C-474D-8D4E-5E0EE3B24ABA}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyAllocator", "MyAllocator\MyAllocator.vcxproj", "{3E08DAA2-DA1B-457B-BEA8-9AE5C9046924}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyAllocatorTest", "MyAllocatorTest\MyAllocatorTest.vcxproj", "{1D84B02F-896A-49A9-82EA-4CB4577F2E64}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3E08DAA2-DA1B-457B-BEA8-9AE5C9046924} = {3E08DAA2-DA1B-457B-BEA8-9AE5C9046924}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
