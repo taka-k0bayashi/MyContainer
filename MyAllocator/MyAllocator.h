@@ -39,6 +39,16 @@ public:
 		((value_type*)ptr)->~value_type();
 	}
 
+	value_type* address(value_type& value) const
+	{
+		return __builtin_addressof(value);
+	}
+
+	const value_type* adress(const value_type& value) const
+	{
+		return __builtin_addressof(value);
+	}
+
 	template<typename U>
 	struct rebind
 	{
