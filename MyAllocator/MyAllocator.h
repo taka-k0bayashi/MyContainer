@@ -28,10 +28,10 @@ public:
 		::operator delete(ptr);
 	}
 
-	template<typename... Args>
-	void construct(value_type* ptr, Args&&... args)
+	template<typename U,typename... Args>
+	void construct(U* ptr, Args&&... args)
 	{
-		::new (ptr) value_type(std::forward<Args>(args)...);
+		::new (ptr) U(std::forward<Args>(args)...);
 	}
 
 	void destroy(value_type* ptr)

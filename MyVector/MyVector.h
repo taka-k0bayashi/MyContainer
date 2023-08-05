@@ -35,41 +35,130 @@ class MyVector
 	MyPair _MyPair;
 	Alloc allocator;
 public:
-	MyVector(size_t size = 0, const T& value = T(), const Alloc& allocator = Alloc()) : _MyPair(), allocator(allocator)
-	{
-		this->_MyPair.first = this->allocator.allocate(size);
-
-		T* pointer = this->_MyPair.first;
-		for (size_t i = 0; i < size; ++i)
-		{
-			this->allocator.construct(pointer, value);
-			++pointer;
-		}
-
-		this->_MyPair.last = this->_MyPair.first + size;
-		this->_MyPair.end = this->_MyPair.first + size;
-	}
-
 	using value_type = T;
 
-	void push_back(const T& t)
+	explicit MyVector(size_t size, const T& value, const Alloc& allocator = Alloc()) : _MyPair(), allocator(allocator)
 	{
+		this->_MyPair.first = this->allocator.allocate(size);
+		this->_MyPair.last = this->_MyPair.first + size;
+		this->_MyPair.end = this->_MyPair.first + size;
 
+		for (size_t i = 0; i < size; ++i)
+		{
+			this->allocator.construct(&this->_MyPair.first[i], value);
+		}
+		/*
+		for (T* pointer = this->_MyPair.first; pointer != this->_MyPair.last; ++pointer)
+		{
+			this->allocator.construct(pointer, value);
+		}*/
+	}
+
+	explicit MyVector(size_t size) : MyVector(size, T(), Alloc()){}
+
+	explicit MyVector(const Alloc& allocator) : MyVector(0, T(), allocator){}
+
+	explicit MyVector() : MyVector(0, T(), Alloc()) {}
+
+	~MyVector() noexcept
+	{
+		for (T* pointer = this->_MyPair.first; pointer != this->_MyPair.last; ++pointer)
+		{
+			this->allocator.destroy(pointer);
+		}
+
+		this->allocator.deallocate(this->_MyPair.first, this->capacity());
+	}
+
+	void push_back(const T& value)
+	{
+		if (static_cast<size_t>(this->_MyPair.end - this->_MyPair.last) > 0)
+		{
+			this->allocator.construct(this->_MyPair.last, value);
+			++this->_MyPair.last;
+		}
+		else
+		{
+			size_t size_ = this->size();
+			T* pointer = this->allocator.allocate(this->reallocate_algorithm(size_));
+			for (size_t i = 0; i < size_; ++i)
+			{
+				this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
+			}
+			this->allocator.construct(&pointer[size_], value);
+
+			for (size_t i = 0; i < size_; ++i)
+			{
+				this->allocator.destroy(&this->_MyPair.first[i]);
+			}
+			this->allocator.deallocate(this->_MyPair.first, size_);
+
+			this->_MyPair.first = pointer;
+			this->_MyPair.last = pointer + size_ + 1;
+			this->_MyPair.end = pointer + this->reallocate_algorithm(size_);
+		}
 	}
 
 	void push_back(T&& value)
 	{
+		if (static_cast<size_t>(this->_MyPair.end - this->_MyPair.last) > 0)
+		{
+			this->allocator.construct(this->_MyPair.last, value);
+			++this->_MyPair.last;
+		}
+		else
+		{
+			size_t size_ = this->size();
+			T* pointer = this->allocator.allocate(this->reallocate_algorithm(size_));
+			for (size_t i = 0; i < size_; ++i)
+			{
+				this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
+			}
+			this->allocator.construct(&pointer[size_], value);
 
+			for (size_t i = 0; i < size_; ++i)
+			{
+				this->allocator.destroy(&this->_MyPair.first[i]);
+			}
+			this->allocator.deallocate(this->_MyPair.first, size_);
+
+			this->_MyPair.first = pointer;
+			this->_MyPair.last = pointer + size_ + 1;
+			this->_MyPair.end = pointer + this->reallocate_algorithm(size_);
+		}
 	}
 
 	void pop_back()
 	{
+		if (this->size() == 0) return;
+		--this->val.last;
+		this->alloc.destroy(this->val.last);
+#if false
+		if (this->reallocate_algorithm(this->size()) < this->capacity())
+		{
 
+		}
+#endif
+	}
+
+	constexpr void clear() noexcept
+	{
+		size_t size = this->size();
+
+		for (size_t i = 0; i < size; ++i)
+		{
+			this->pop_back();
+		}
 	}
 	
 	constexpr size_t size() const noexcept
 	{
 		return this->_MyPair.last - this->_MyPair.first;
+	}
+
+	constexpr size_t capacity() const noexcept
+	{
+		return this->_MyPair.end - this->_MyPair.first;
 	}
 
 	bool empty() const noexcept
@@ -87,6 +176,29 @@ public:
 	{
 		if (index >= this->size()) throw;
 		return *(this->_MyPair.first + index);
+	}
+
+	T* data() const noexcept
+	{
+		return this->_MyPair.first;
+	}
+private:
+	// size を再度確保する時の次のサイズを計算する関数
+	size_t reallocate_algorithm(size_t size)
+	{
+		return 2 * size + 1;
+		// STL
+		if (size == 1) return 2;
+		return static_cast<size_t>(this->reallocate_algorithm(size - 1) * (3.0/2.0));
+	}
+
+	void reallocate(MyPair& pair, size_t size)
+	{
+
+	}
+
+	void emplace(T&& value)
+	{
 	}
 };
 
