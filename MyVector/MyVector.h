@@ -37,28 +37,23 @@ class MyVector
 public:
 	using value_type = T;
 
-	explicit MyVector(size_t size, const T& value, const Alloc& allocator = Alloc()) : _MyPair(), allocator(allocator)
+	constexpr explicit MyVector(size_t size, const T& value, const Alloc& allocator = Alloc()) : _MyPair(), allocator(allocator)
 	{
 		this->_MyPair.first = this->allocator.allocate(size);
 		this->_MyPair.last = this->_MyPair.first + size;
 		this->_MyPair.end = this->_MyPair.first + size;
 
-		for (size_t i = 0; i < size; ++i)
-		{
-			this->allocator.construct(&this->_MyPair.first[i], value);
-		}
-		/*
 		for (T* pointer = this->_MyPair.first; pointer != this->_MyPair.last; ++pointer)
 		{
 			this->allocator.construct(pointer, value);
-		}*/
+		}
 	}
 
 	explicit MyVector(size_t size) : MyVector(size, T(), Alloc()){}
 
-	explicit MyVector(const Alloc& allocator) : MyVector(0, T(), allocator){}
+	explicit MyVector(const Alloc& allocator) noexcept: MyVector(0, T(), allocator){}
 
-	explicit MyVector() : MyVector(0, T(), Alloc()) {}
+	explicit MyVector() noexcept: MyVector(0, T(), Alloc()) {}
 
 	~MyVector() noexcept
 	{
@@ -181,6 +176,18 @@ public:
 	T* data() const noexcept
 	{
 		return this->_MyPair.first;
+	}
+
+	constexpr T front() const
+	{
+		if (!this->_MyPair.first) throw;
+		return *this->_MyPair.first;
+	}
+
+	constexpr T back() const
+	{
+		if (!this->_MyPair.first) throw;
+		return *(this->_MyPair.last - 1);
 	}
 private:
 	// size を再度確保する時の次のサイズを計算する関数

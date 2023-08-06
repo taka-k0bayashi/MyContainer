@@ -306,10 +306,54 @@ TEST(Data, Test1)
 	}
 }
 
-
 TEST(Pop_back, Test1)
 {
 	MyVector<int> vector;
+}
+
+TEST(Front, Test1)
+{
+	MyVector<int> vector;
+
+	vector.push_back(1);
+	vector.push_back(3);
+
+	EXPECT_EQ(vector.front(), 1);
+}
+
+TEST(Front, Test2)
+{
+	MyVector<int> vector;
+
+	vector.push_back(1);
+	vector.push_back(3);
+
+	vector.push_back(1);
+
+	EXPECT_EQ(vector.front(), 1);
+}
+
+TEST(Back, Test1)
+{
+	MyVector<int> vector;
+
+	vector.push_back(1);
+	vector.push_back(3);
+
+	EXPECT_EQ(vector.back(), 3);
+}
+
+TEST(Back, Test2)
+{
+	MyVector<int> vector;
+
+	vector.push_back(1);
+	vector.push_back(3);
+
+	vector.push_back(5);
+
+
+	EXPECT_EQ(vector.back(), 5);
 }
 
 class LeakChecker : public ::testing::EmptyTestEventListener
