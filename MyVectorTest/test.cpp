@@ -268,9 +268,9 @@ TEST(Push_back, Test4)
 {
 	MyVector<int> vector;
 
-	size_t size = 1000;
+	int size = 1000;
 
-	for (size_t i = 0; i < size; ++i)
+	for (int i = 0; i < size; ++i)
 	{
 		vector.push_back(i);
 	}
@@ -354,6 +354,37 @@ TEST(Back, Test2)
 
 
 	EXPECT_EQ(vector.back(), 5);
+}
+
+TEST(Resize, Test1)
+{
+	MyVector<int> vector;
+
+	vector.resize(5);
+
+	EXPECT_EQ(vector.size(), 5);
+
+	for (size_t i = 0; i < 5; ++i)
+	{
+		EXPECT_EQ(vector[i], 0);
+	}
+}
+
+TEST(Resize, Test2)
+{
+	MyVector<int> vector(2,5);
+
+	vector.resize(5);
+
+	EXPECT_EQ(vector.size(), 5);
+
+	EXPECT_EQ(vector[0], 5);
+	EXPECT_EQ(vector[1], 5);
+
+	for (size_t i = 2; i < 5; ++i)
+	{
+		EXPECT_EQ(vector[i], 0);
+	}
 }
 
 class LeakChecker : public ::testing::EmptyTestEventListener
