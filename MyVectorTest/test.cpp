@@ -363,6 +363,7 @@ TEST(Resize, Test1)
 	vector.resize(5);
 
 	EXPECT_EQ(vector.size(), 5);
+	EXPECT_TRUE(vector.capacity() >= 5);
 
 	for (size_t i = 0; i < 5; ++i)
 	{
@@ -377,6 +378,7 @@ TEST(Resize, Test2)
 	vector.resize(5);
 
 	EXPECT_EQ(vector.size(), 5);
+	EXPECT_TRUE(vector.capacity() >= 5);
 
 	EXPECT_EQ(vector[0], 5);
 	EXPECT_EQ(vector[1], 5);
@@ -385,6 +387,31 @@ TEST(Resize, Test2)
 	{
 		EXPECT_EQ(vector[i], 0);
 	}
+}
+
+TEST(Reserve, Test1)
+{
+	MyVector<int> vector;
+
+	vector.reserve(5);
+
+	EXPECT_EQ(vector.size(), 0);
+
+	EXPECT_TRUE(vector.capacity() >= 5);
+}
+
+TEST(Reserve, Test2)
+{
+	MyVector<int> vector(2, 5);
+
+	vector.reserve(5);
+
+	EXPECT_EQ(vector[0], 5);
+	EXPECT_EQ(vector[1], 5);
+
+	EXPECT_EQ(vector.size(), 2);
+
+	EXPECT_TRUE(vector.capacity() >= 5);
 }
 
 class LeakChecker : public ::testing::EmptyTestEventListener

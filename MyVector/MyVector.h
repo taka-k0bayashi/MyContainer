@@ -218,6 +218,31 @@ public:
 		this->_MyPair.last = pointer + size;
 		this->_MyPair.end = pointer + size;
 	}
+
+	void reserve(size_t size)
+	{
+		if (size <= this->size())
+		{
+			return;
+		}
+
+		size_t old_size = this->size();
+		T* pointer = this->allocator.allocate(size);
+		for (size_t i = 0; i < old_size; ++i)
+		{
+			this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
+		}
+
+		for (size_t i = 0; i < old_size; ++i)
+		{
+			this->allocator.destroy(&this->_MyPair.first[i]);
+		}
+		this->allocator.deallocate(this->_MyPair.first, old_size);
+
+		this->_MyPair.first = pointer;
+		this->_MyPair.last = pointer + old_size;
+		this->_MyPair.end = pointer + size;
+	}
 private:
 	// size を再度確保する時の次のサイズを計算する関数
 	size_t reallocate_algorithm(size_t size)
