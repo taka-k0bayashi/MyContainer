@@ -104,6 +104,7 @@ public:
 		else
 		{
 			size_t size_ = this->size();
+			size_t capacity_ = this->capacity();
 			T* pointer = this->allocator.allocate(this->reallocate_algorithm(size_));
 			for (size_t i = 0; i < size_; ++i)
 			{
@@ -119,7 +120,7 @@ public:
 
 			this->_MyPair.first = pointer;
 			this->_MyPair.last = pointer + size_ + 1;
-			this->_MyPair.end = pointer + this->reallocate_algorithm(size_);
+			this->_MyPair.end = pointer + this->reallocate_algorithm(capacity_);
 		}
 	}
 
@@ -198,6 +199,7 @@ public:
 		}
 
 		size_t old_size = this->size();
+		size_t old_capacity = this->capacity();
 		T* pointer = this->allocator.allocate(size);
 		for (size_t i = 0; i < old_size; ++i)
 		{
@@ -212,7 +214,7 @@ public:
 		{
 			this->allocator.destroy(&this->_MyPair.first[i]);
 		}
-		this->allocator.deallocate(this->_MyPair.first, old_size);
+		this->allocator.deallocate(this->_MyPair.first, old_capacity);
 
 		this->_MyPair.first = pointer;
 		this->_MyPair.last = pointer + size;
@@ -227,6 +229,7 @@ public:
 		}
 
 		size_t old_size = this->size();
+		size_t old_capacity = this->capacity();
 		T* pointer = this->allocator.allocate(size);
 		for (size_t i = 0; i < old_size; ++i)
 		{
@@ -237,11 +240,37 @@ public:
 		{
 			this->allocator.destroy(&this->_MyPair.first[i]);
 		}
-		this->allocator.deallocate(this->_MyPair.first, old_size);
+		this->allocator.deallocate(this->_MyPair.first, old_capacity);
 
 		this->_MyPair.first = pointer;
 		this->_MyPair.last = pointer + old_size;
 		this->_MyPair.end = pointer + size;
+	}
+
+	void shrink_to_fit()
+	{
+		if (this->_MyPair.last == this->_MyPair.end)
+		{
+			return;
+		}
+
+		size_t old_size = this->size();
+		size_t old_capacity = this->capacity();
+		T* pointer = this->allocator.allocate(old_size);
+		for (size_t i = 0; i < old_size; ++i)
+		{
+			this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
+		}
+
+		for (size_t i = 0; i < old_size; ++i)
+		{
+			this->allocator.destroy(&this->_MyPair.first[i]);
+		}
+		this->allocator.deallocate(this->_MyPair.first, old_capacity);
+
+		this->_MyPair.first = pointer;
+		this->_MyPair.last = pointer + old_size;
+		this->_MyPair.end = pointer + old_size;
 	}
 private:
 	// size を再度確保する時の次のサイズを計算する関数

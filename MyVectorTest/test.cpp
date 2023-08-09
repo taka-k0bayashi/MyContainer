@@ -414,6 +414,44 @@ TEST(Reserve, Test2)
 	EXPECT_TRUE(vector.capacity() >= 5);
 }
 
+TEST(ShrinkToFit, Test1)
+{
+	MyVector<int> vector;
+
+	vector.reserve(7);
+
+	EXPECT_TRUE(vector.capacity() >= 7);
+
+	vector.shrink_to_fit();
+
+	EXPECT_EQ(vector.capacity(), 0);
+}
+
+TEST(ShrinkToFit, Test2)
+{
+	MyVector<int> vector;
+
+	vector.shrink_to_fit();
+
+	EXPECT_EQ(vector.capacity(), 0);
+}
+
+TEST(ShrinkToFit, Test3)
+{
+	MyVector<int> vector;
+
+	for (int i = 0; i < 9; ++i)
+	{
+		vector.push_back(i);
+	}
+
+	EXPECT_TRUE(vector.capacity() >= 9);
+
+	vector.shrink_to_fit();
+
+	EXPECT_EQ(vector.capacity(), 9);
+}
+
 class LeakChecker : public ::testing::EmptyTestEventListener
 {
 private:
