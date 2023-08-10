@@ -75,22 +75,11 @@ public:
 		else
 		{
 			size_t size_ = this->size();
-			T* pointer = this->allocator.allocate(this->reallocate_algorithm(size_));
-			for (size_t i = 0; i < size_; ++i)
-			{
-				this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
-			}
-			this->allocator.construct(&pointer[size_], value);
 
-			for (size_t i = 0; i < size_; ++i)
-			{
-				this->allocator.destroy(&this->_MyPair.first[i]);
-			}
-			this->allocator.deallocate(this->_MyPair.first, size_);
+			this->reallocate(this->reallocate_algorithm(this->size()));
 
-			this->_MyPair.first = pointer;
-			this->_MyPair.last = pointer + size_ + 1;
-			this->_MyPair.end = pointer + this->reallocate_algorithm(size_);
+			this->allocator.construct(&this->_MyPair.first[size_], value);
+			this->_MyPair.last += 1;
 		}
 	}
 
@@ -104,23 +93,11 @@ public:
 		else
 		{
 			size_t size_ = this->size();
-			size_t capacity_ = this->capacity();
-			T* pointer = this->allocator.allocate(this->reallocate_algorithm(size_));
-			for (size_t i = 0; i < size_; ++i)
-			{
-				this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
-			}
-			this->allocator.construct(&pointer[size_], value);
 
-			for (size_t i = 0; i < size_; ++i)
-			{
-				this->allocator.destroy(&this->_MyPair.first[i]);
-			}
-			this->allocator.deallocate(this->_MyPair.first, size_);
+			this->reallocate(this->reallocate_algorithm(this->size()));
 
-			this->_MyPair.first = pointer;
-			this->_MyPair.last = pointer + size_ + 1;
-			this->_MyPair.end = pointer + this->reallocate_algorithm(capacity_);
+			this->allocator.construct(&this->_MyPair.first[size_], value);
+			this->_MyPair.last += 1;
 		}
 	}
 
@@ -199,26 +176,15 @@ public:
 		}
 
 		size_t old_size = this->size();
-		size_t old_capacity = this->capacity();
-		T* pointer = this->allocator.allocate(size);
-		for (size_t i = 0; i < old_size; ++i)
-		{
-			this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
-		}
+
+		this->reallocate(size);
+
 		for (size_t i = old_size; i < size; ++i)
 		{
-			this->allocator.construct(&pointer[i], T());
+			this->allocator.construct(&this->_MyPair.first[i], T());
 		}
 
-		for (size_t i = 0; i < old_size; ++i)
-		{
-			this->allocator.destroy(&this->_MyPair.first[i]);
-		}
-		this->allocator.deallocate(this->_MyPair.first, old_capacity);
-
-		this->_MyPair.first = pointer;
-		this->_MyPair.last = pointer + size;
-		this->_MyPair.end = pointer + size;
+		this->_MyPair.last += size - old_size;
 	}
 
 	void reserve(size_t size)
@@ -228,23 +194,7 @@ public:
 			return;
 		}
 
-		size_t old_size = this->size();
-		size_t old_capacity = this->capacity();
-		T* pointer = this->allocator.allocate(size);
-		for (size_t i = 0; i < old_size; ++i)
-		{
-			this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
-		}
-
-		for (size_t i = 0; i < old_size; ++i)
-		{
-			this->allocator.destroy(&this->_MyPair.first[i]);
-		}
-		this->allocator.deallocate(this->_MyPair.first, old_capacity);
-
-		this->_MyPair.first = pointer;
-		this->_MyPair.last = pointer + old_size;
-		this->_MyPair.end = pointer + size;
+		this->reallocate(size);
 	}
 
 	void shrink_to_fit()
@@ -253,10 +203,24 @@ public:
 		{
 			return;
 		}
+		
+		this->reallocate(this->size());
+	}
+private:
+	// size を再度確保する時の次のサイズを計算する関数
+	size_t reallocate_algorithm(size_t size)
+	{
+		return 2 * size + 1;
+		// STL
+		if (size == 1) return 2;
+		return static_cast<size_t>(this->reallocate_algorithm(size - 1) * (1.5));
+	}
 
+	void reallocate(size_t new_allocate_size)
+	{
 		size_t old_size = this->size();
 		size_t old_capacity = this->capacity();
-		T* pointer = this->allocator.allocate(old_size);
+		T* pointer = this->allocator.allocate(new_allocate_size);
 		for (size_t i = 0; i < old_size; ++i)
 		{
 			this->allocator.construct(&pointer[i], this->_MyPair.first[i]);
@@ -270,21 +234,7 @@ public:
 
 		this->_MyPair.first = pointer;
 		this->_MyPair.last = pointer + old_size;
-		this->_MyPair.end = pointer + old_size;
-	}
-private:
-	// size を再度確保する時の次のサイズを計算する関数
-	size_t reallocate_algorithm(size_t size)
-	{
-		return 2 * size + 1;
-		// STL
-		if (size == 1) return 2;
-		return static_cast<size_t>(this->reallocate_algorithm(size - 1) * (3.0/2.0));
-	}
-
-	void reallocate(MyPair& pair, size_t size)
-	{
-
+		this->_MyPair.end = pointer + new_allocate_size;
 	}
 
 	void emplace(T&& value)
