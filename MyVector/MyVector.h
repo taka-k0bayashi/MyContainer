@@ -16,7 +16,7 @@
 #define Version1_END }
 #endif
 
-#include "../MyAllocator/MyAllocator.h"
+#include "MyAllocator.h"
 
 CONTAINER_NAMESPACE_BEGIN
 
