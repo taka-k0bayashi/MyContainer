@@ -55,6 +55,19 @@ public:
 
 	explicit MyVector() noexcept: MyVector(0, T(), Alloc()) {}
 
+	MyVector(const MyVector& rhs) : _MyPair(), allocator(rhs.allocator)
+	{
+		this->reallocate(rhs.size());
+
+		T* pointer = this->_MyPair.first;// ˆÓ–¡‚ ‚è
+
+		for (size_t i = 0; i < rhs.size(); ++i)
+		{
+			this->allocator.construct(&pointer[i], rhs._MyPair.first[i]);
+		}
+		this->_MyPair.last += rhs.size();
+	}
+
 	~MyVector() noexcept
 	{
 		for (T* pointer = this->_MyPair.first; pointer != this->_MyPair.last; ++pointer)
