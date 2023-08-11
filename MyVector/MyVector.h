@@ -37,7 +37,7 @@ class MyVector
 public:
 	using value_type = T;
 
-	constexpr explicit MyVector(size_t size, const T& value, const Alloc& allocator = Alloc()) : _MyPair(), allocator(allocator)
+	explicit MyVector(size_t size, const T& value, const Alloc& allocator = Alloc()) : _MyPair(), allocator(allocator)
 	{
 		this->_MyPair.first = this->allocator.allocate(size);
 		this->_MyPair.last = this->_MyPair.first + size;
@@ -127,7 +127,7 @@ public:
 #endif
 	}
 
-	constexpr void clear() noexcept
+	void clear() noexcept
 	{
 		size_t size = this->size();
 
@@ -137,12 +137,12 @@ public:
 		}
 	}
 	
-	constexpr size_t size() const noexcept
+	size_t size() const noexcept
 	{
 		return this->_MyPair.last - this->_MyPair.first;
 	}
 
-	constexpr size_t capacity() const noexcept
+	size_t capacity() const noexcept
 	{
 		return this->_MyPair.end - this->_MyPair.first;
 	}
@@ -169,13 +169,13 @@ public:
 		return this->_MyPair.first;
 	}
 
-	constexpr T front() const
+	T front() const
 	{
 		if (!this->_MyPair.first) throw;
 		return *this->_MyPair.first;
 	}
 
-	constexpr T back() const
+	T back() const
 	{
 		if (!this->_MyPair.first) throw;
 		return *(this->_MyPair.last - 1);
