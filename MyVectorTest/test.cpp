@@ -197,6 +197,33 @@ TEST(CopyConstruct, Test2)
 	EXPECT_FALSE(copy_vector.empty());
 }
 
+TEST(MoveConstruct, Test1)
+{
+	MyVector<int> vector(2, 1);
+
+	MyVector<int> copy_vector(std::move(vector));
+
+	EXPECT_EQ(copy_vector.size(), 2);
+
+	EXPECT_EQ(copy_vector.capacity(), 2);
+
+	EXPECT_FALSE(copy_vector.empty());
+}
+
+TEST(MoveConstruct, Test2)
+{
+	MyVector<int>* vector = new MyVector<int>(5, 2);
+
+	MyVector<int> copy_vector(std::move(*vector));
+
+	delete vector;
+
+	EXPECT_EQ(copy_vector.size(), 5);
+
+	EXPECT_EQ(copy_vector.capacity(), 5);
+
+	EXPECT_FALSE(copy_vector.empty());
+}
 TEST(Destruct, Test1)
 {
 	int count = 0;

@@ -68,6 +68,17 @@ public:
 		this->_MyPair.last += rhs.size();
 	}
 
+	MyVector(MyVector&& rhs) : _MyPair(), allocator(std::move(rhs.allocator))
+	{
+		this->_MyPair.first = rhs._MyPair.first;
+		rhs._MyPair.first = nullptr;
+
+		this->_MyPair.last = rhs._MyPair.last;
+		rhs._MyPair.last = nullptr;
+
+		this->_MyPair.end = rhs._MyPair.end;
+		rhs._MyPair.end = nullptr;
+	}
 	~MyVector() noexcept
 	{
 		for (T* pointer = this->_MyPair.first; pointer != this->_MyPair.last; ++pointer)
