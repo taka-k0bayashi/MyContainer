@@ -91,38 +91,12 @@ public:
 
 	void push_back(const T& value)
 	{
-		if (static_cast<size_t>(this->_MyPair.end - this->_MyPair.last) > 0)
-		{
-			this->allocator.construct(this->_MyPair.last, value);
-			++this->_MyPair.last;
-		}
-		else
-		{
-			size_t size_ = this->size();
-
-			this->reallocate(this->reallocate_algorithm(this->size()));
-
-			this->allocator.construct(&this->_MyPair.first[size_], value);
-			this->_MyPair.last += 1;
-		}
+		this->emplace_one_at_back(value);
 	}
 
 	void push_back(T&& value)
 	{
-		if (static_cast<size_t>(this->_MyPair.end - this->_MyPair.last) > 0)
-		{
-			this->allocator.construct(this->_MyPair.last, value);
-			++this->_MyPair.last;
-		}
-		else
-		{
-			size_t size_ = this->size();
-
-			this->reallocate(this->reallocate_algorithm(this->size()));
-
-			this->allocator.construct(&this->_MyPair.first[size_], value);
-			this->_MyPair.last += 1;
-		}
+		this->emplace_one_at_back(std::move(value));
 	}
 
 	void pop_back()
@@ -130,12 +104,6 @@ public:
 		if (this->size() == 0) return;
 		--this->val.last;
 		this->alloc.destroy(this->val.last);
-#if false
-		if (this->reallocate_algorithm(this->size()) < this->capacity())
-		{
-
-		}
-#endif
 	}
 
 	void clear() noexcept
@@ -232,12 +200,12 @@ public:
 	}
 private:
 	// size を再度確保する時の次のサイズを計算する関数
-	size_t reallocate_algorithm(size_t size)
+	size_t resize_algorithm(size_t size)
 	{
 		return 2 * size + 1;
 		// STL
 		if (size == 1) return 2;
-		return static_cast<size_t>(this->reallocate_algorithm(size - 1) * (1.5));
+		return static_cast<size_t>(this->resize_algorithm(size - 1) * (1.5));
 	}
 
 	void reallocate(size_t new_allocate_size)
@@ -261,8 +229,27 @@ private:
 		this->_MyPair.end = pointer + new_allocate_size;
 	}
 
-	void emplace(T&& value)
+	template<typename Valty>
+	T& emplace_one_at_back(Valty&& value)
 	{
+		if (static_cast<size_t>(this->_MyPair.end - this->_MyPair.last) > 0)
+		{
+			this->allocator.construct(this->_MyPair.last, value);
+			T& result = *this->_MyPair.last;
+			++this->_MyPair.last;
+			return result;
+		}
+		else
+		{
+			size_t size_ = this->size();
+
+			this->reallocate(this->resize_algorithm(this->size()));
+
+			this->allocator.construct(&this->_MyPair.first[size_], value);
+			T& result = *this->_MyPair.last;
+			++this->_MyPair.last;
+			return result;
+		}
 	}
 };
 
