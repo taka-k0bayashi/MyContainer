@@ -38,6 +38,12 @@ public:
 		++this->count;
 	}
 };
+
+class TestEmplaceBack
+{
+public:
+	TestEmplaceBack(int num1, int num2){}
+};
 TEST(Size, Test1) 
 {
 	MyVector<int> vector;
@@ -342,6 +348,51 @@ TEST(Push_back, Test4)
 	}
 }
 
+TEST(Emplace_back, Test1)
+{
+	MyVector<int> vector;
+
+	vector.emplace_back(2);
+
+	EXPECT_EQ(vector.size(), 1);
+
+	EXPECT_TRUE(vector.capacity() >= 1);
+
+	EXPECT_FALSE(vector.empty());
+
+	EXPECT_EQ(vector[0], 2);
+}
+
+TEST(Emplace_back, Test2)
+{
+	MyVector<TestEmplaceBack> vector;
+
+	vector.emplace_back(1, 2);
+
+	EXPECT_EQ(vector.size(), 1);
+
+	EXPECT_TRUE(vector.capacity() >= 1);
+
+	EXPECT_FALSE(vector.empty());
+}
+
+TEST(Emplace_back, Test3)
+{
+	int num = 10;
+
+	MyVector<TestEmplaceBack> vector;
+
+	for (int i = 0; i < num; ++i)
+	{
+		vector.emplace_back(i, 2 * i);
+	}
+
+	EXPECT_EQ(vector.size(), num);
+
+	EXPECT_TRUE(vector.capacity() >= num);
+
+	EXPECT_FALSE(vector.empty());
+}
 TEST(Data, Test1)
 {
 	MyVector<int> vector;

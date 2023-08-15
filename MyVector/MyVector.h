@@ -51,9 +51,9 @@ public:
 
 	explicit MyVector(size_t size) : MyVector(size, T(), Alloc()){}
 
-	explicit MyVector(const Alloc& allocator) noexcept: MyVector(0, T(), allocator){}
+	explicit MyVector(const Alloc& allocator) noexcept: _MyPair(), allocator(allocator) {}
 
-	explicit MyVector() noexcept: MyVector(0, T(), Alloc()) {}
+	explicit MyVector() noexcept: _MyPair(), allocator(Alloc()) {}
 
 	MyVector(const MyVector& rhs) : _MyPair(), allocator(rhs.allocator)
 	{
@@ -98,7 +98,11 @@ public:
 	{
 		this->emplace_one_at_back(std::move(value));
 	}
-
+	template<typename... Valty>
+	void emplace_back(Valty&&... value)
+	{
+		this->emplace_one_at_back(std::forward<Valty>(value)...);
+	}
 	void pop_back()
 	{
 		if (this->size() == 0) return;
@@ -229,12 +233,12 @@ private:
 		this->_MyPair.end = pointer + new_allocate_size;
 	}
 
-	template<typename Valty>
-	T& emplace_one_at_back(Valty&& value)
+	template<typename... Valty>
+	T& emplace_one_at_back(Valty&&... value)
 	{
 		if (static_cast<size_t>(this->_MyPair.end - this->_MyPair.last) > 0)
 		{
-			this->allocator.construct(this->_MyPair.last, value);
+			this->allocator.construct(this->_MyPair.last, std::forward<Valty>(value)...);
 			T& result = *this->_MyPair.last;
 			++this->_MyPair.last;
 			return result;
@@ -245,7 +249,7 @@ private:
 
 			this->reallocate(this->resize_algorithm(this->size()));
 
-			this->allocator.construct(&this->_MyPair.first[size_], value);
+			this->allocator.construct(&this->_MyPair.first[size_], std::forward<Valty>(value)...);
 			T& result = *this->_MyPair.last;
 			++this->_MyPair.last;
 			return result;
