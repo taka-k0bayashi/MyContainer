@@ -4,6 +4,8 @@
 
 using MyContainer::MyVector;
 
+Version1_BEGIN
+
 class MyClass
 {
 	int num;
@@ -557,6 +559,8 @@ TEST(ShrinkToFit, Test3)
 
 	EXPECT_EQ(vector.capacity(), 9);
 }
+
+Version1_END
 
 class LeakChecker : public ::testing::EmptyTestEventListener
 {

@@ -3,6 +3,8 @@
 
 using namespace MyContainer;
 
+Version1_BEGIN
+
 TEST(Star, Test1) 
 {
 	int* pointer = new int[5];
@@ -100,6 +102,8 @@ TEST(Plus, Test1)
 
 	delete[] pointer;
 }
+
+Version1_END
 
 
 class LeakChecker : public ::testing::EmptyTestEventListener
