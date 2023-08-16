@@ -5,6 +5,15 @@ using namespace MyContainer;
 
 Version1_BEGIN
 
+class TestArrow
+{
+public:
+	int return_2_function()
+	{
+		return 2;
+	}
+};
+
 TEST(Star, Test1) 
 {
 	int* pointer = new int[5];
@@ -168,6 +177,17 @@ TEST(NotEqual, Test1)
 	EXPECT_FALSE(itr != itr3);
 
 	delete[] pointer;
+}
+
+TEST(Arrow, Test1)
+{
+	TestArrow* objects = new TestArrow[6]();
+
+	MyIterator<TestArrow> itr(objects, objects, &objects[6]);
+
+	EXPECT_EQ(itr->return_2_function(), 2);
+
+	delete[] objects;
 }
 
 Version1_END

@@ -81,6 +81,11 @@ public:
 	{
 		return !(*this == rhs);
 	}
+
+	ValPtr* operator->() const noexcept
+	{
+		return this->pointer;
+	}
 };
 
 Version1_END
