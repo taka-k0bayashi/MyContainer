@@ -126,6 +126,50 @@ TEST(Minus, Test1)
 	delete[] pointer;
 }
 
+TEST(Equal, Test1)
+{
+	int* pointer = new int[5];
+	pointer[0] = 2;
+	pointer[1] = 3;
+	MyIterator<int> itr(pointer, pointer, &pointer[5]);
+	MyIterator<int> itr2(pointer, pointer, &pointer[5]);
+
+	EXPECT_TRUE(itr == itr2);
+
+	++itr;
+	++itr2;
+
+	EXPECT_TRUE(itr == itr2);
+
+	MyIterator<int> itr3(&pointer[1], pointer, &pointer[5]);
+
+	EXPECT_TRUE(itr == itr3);
+
+	delete[] pointer;
+}
+
+TEST(NotEqual, Test1)
+{
+	int* pointer = new int[5];
+	pointer[0] = 2;
+	pointer[1] = 3;
+	MyIterator<int> itr(pointer, pointer, &pointer[5]);
+	MyIterator<int> itr2(pointer, pointer, &pointer[5]);
+
+	EXPECT_FALSE(itr != itr2);
+
+	++itr;
+	++itr2;
+
+	EXPECT_FALSE(itr != itr2);
+
+	MyIterator<int> itr3(&pointer[1], pointer, &pointer[5]);
+
+	EXPECT_FALSE(itr != itr3);
+
+	delete[] pointer;
+}
+
 Version1_END
 
 

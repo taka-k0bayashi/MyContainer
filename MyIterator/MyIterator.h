@@ -24,7 +24,6 @@ Version1_BEGIN
 template<typename ValPtr>
 class MyIterator
 {
-	//using ValPtr = typename MyVec::poiner;
 	ValPtr* pointer;
 	const ValPtr* first;
 	const ValPtr* last;
@@ -71,6 +70,16 @@ public:
 	{
 		this->pointer -= num;
 		return *this;
+	}
+
+	bool operator==(const MyIterator& rhs)
+	{
+		return this->pointer == rhs.pointer;
+	}
+
+	bool operator!=(const MyIterator& rhs)
+	{
+		return !(*this == rhs);
 	}
 };
 
