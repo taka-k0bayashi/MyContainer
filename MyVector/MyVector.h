@@ -25,7 +25,7 @@ Version1_BEGIN
 template<typename T, typename Alloc = MyContainer::MyAllocator<T>>
 class MyVector
 {
-	struct MyPair
+	struct MyPair 
 	{
 		T* first;
 		T* last;

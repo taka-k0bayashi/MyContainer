@@ -1,0 +1,55 @@
+#pragma once
+
+
+#ifndef CONTAINER_NAMESPACE_BEGIN
+#define CONTAINER_NAMESPACE_BEGIN namespace MyContainer{
+#endif
+
+#ifndef CONTAINER_NAMESPACE_END
+#define CONTAINER_NAMESPACE_END }
+#endif
+
+#ifndef Version1_BEGIN
+#define Version1_BEGIN inline namespace ver1{
+#endif
+
+#ifndef Version1_END
+#define Version1_END }
+#endif
+
+CONTAINER_NAMESPACE_BEGIN
+
+Version1_BEGIN
+
+template<typename ValPtr>
+class MyIterator
+{
+	//using ValPtr = typename MyVec::poiner;
+	ValPtr* pointer;
+	const ValPtr* first;
+	const ValPtr* last;
+	bool valid;
+public:
+	MyIterator(ValPtr* pointer, const ValPtr* first, const ValPtr* last) : pointer(pointer), first(first), last(last), valid(true) {}
+
+	ValPtr operator*()
+	{
+		return *this->pointer;
+	}
+
+	MyIterator& operator++()
+	{
+		++pointer;
+		return *this;
+	}
+
+	MyIterator operator++(int)
+	{
+		++pointer;
+		return *this;
+	}
+};
+
+Version1_END
+
+CONTAINER_NAMESPACE_END
