@@ -37,6 +37,7 @@ class MyVector
 	Alloc allocator;
 public:
 	using value_type = T;
+	using iterator = MyIterator<T>;
 
 	explicit MyVector(size_t size, const T& value, const Alloc& allocator = Alloc()) : _MyPair(), allocator(allocator)
 	{
@@ -202,6 +203,16 @@ public:
 		}
 		
 		this->reallocate(this->size());
+	}
+
+	iterator begin() const
+	{
+		return iterator(this->_MyPair.first, this->_MyPair.first, this->_MyPair.last);
+	}
+
+	iterator end() const
+	{
+		return iterator(this->_MyPair.last, this->_MyPair.first, this->_MyPair.last);
 	}
 private:
 	// size を再度確保する時の次のサイズを計算する関数

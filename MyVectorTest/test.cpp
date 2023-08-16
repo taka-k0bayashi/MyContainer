@@ -561,6 +561,33 @@ TEST(ShrinkToFit, Test3)
 	EXPECT_EQ(vector.capacity(), 9);
 }
 
+TEST(Iterator, Test1)
+{
+	MyVector<int> vector;
+
+	for (int i = 0; i < 10; ++i)
+	{
+		vector.push_back(i);
+	}
+
+	MyVector<int>::iterator itr = vector.begin();
+
+	for (int i = 0; i < 10; ++i, ++itr)
+	{
+		EXPECT_EQ(*itr, i);
+	}
+}
+
+TEST(Iterator, Test2)
+{
+	MyVector<int> vector(15, 3);
+
+	for(auto value : vector)
+	{
+		EXPECT_EQ(value, 3);
+	}
+}
+
 Version1_END
 
 class LeakChecker : public ::testing::EmptyTestEventListener
