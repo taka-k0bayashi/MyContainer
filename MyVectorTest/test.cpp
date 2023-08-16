@@ -3,7 +3,7 @@
 #include "../MyIterator/MyIterator.h"
 #include <vector>
 
-using MyContainer::MyVector;
+using namespace MyContainer;
 
 Version1_BEGIN
 
@@ -418,6 +418,41 @@ TEST(Data, Test1)
 TEST(Pop_back, Test1)
 {
 	MyVector<int> vector;
+
+	vector.push_back(1);
+	vector.push_back(2);
+
+	vector.pop_back();
+
+	ASSERT_EQ(vector.size(), 1);
+	EXPECT_TRUE(vector.capacity() >= 1);
+	EXPECT_EQ(vector[0], 1);
+}
+
+TEST(Pop_back, Test2)
+{
+	MyVector<int> vector;
+
+	vector.push_back(1);
+	vector.push_back(2);
+
+	vector.pop_back();
+
+	vector.push_back(3);
+	vector.push_back(4);
+	vector.push_back(5);
+
+	vector.pop_back();
+	vector.pop_back();
+
+	vector.push_back(6);
+
+	vector.pop_back();
+	vector.pop_back();
+
+	ASSERT_EQ(vector.size(), 1);
+	EXPECT_TRUE(vector.capacity() >= 1);
+	EXPECT_EQ(vector[0], 1);
 }
 
 TEST(Front, Test1)

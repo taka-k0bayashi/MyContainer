@@ -108,8 +108,8 @@ public:
 	void pop_back()
 	{
 		if (this->size() == 0) return;
-		--this->val.last;
-		this->alloc.destroy(this->val.last);
+		--this->_MyPair.last;
+		this->allocator.destroy(this->_MyPair.last);
 	}
 
 	void clear() noexcept
