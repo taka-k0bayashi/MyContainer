@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "../MyVector/MyVector.h"
+#include "../MyIterator/MyIterator.h"
 #include <vector>
 
 using MyContainer::MyVector;

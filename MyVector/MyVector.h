@@ -17,6 +17,7 @@
 #endif
 
 #include "MyAllocator.h"
+#include "MyIterator.h"
 
 CONTAINER_NAMESPACE_BEGIN
 
