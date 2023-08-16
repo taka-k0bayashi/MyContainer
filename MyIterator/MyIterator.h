@@ -66,6 +66,12 @@ public:
 		this->pointer += num;
 		return *this;
 	}
+
+	MyIterator& operator-(int num)
+	{
+		this->pointer -= num;
+		return *this;
+	}
 };
 
 Version1_END

@@ -103,6 +103,29 @@ TEST(Plus, Test1)
 	delete[] pointer;
 }
 
+TEST(Minus, Test1)
+{
+	int* pointer = new int[5];
+	for (int i = 0; i < 5; ++i)
+	{
+		pointer[i] = i + 2;
+	}
+
+	MyIterator<int> itr(&pointer[3], pointer, &pointer[5]);
+
+	EXPECT_EQ(*itr, 5);
+
+	itr = itr - 1;
+
+	EXPECT_EQ(*itr, 4);
+
+	itr = itr - 2;
+
+	EXPECT_EQ(*itr, 2);
+
+	delete[] pointer;
+}
+
 Version1_END
 
 
