@@ -39,13 +39,31 @@ public:
 
 	MyIterator& operator++()
 	{
-		++pointer;
+		++this->pointer;
 		return *this;
 	}
 
 	MyIterator operator++(int)
 	{
-		++pointer;
+		++this->pointer;
+		return *this;
+	}
+
+	MyIterator& operator--()
+	{
+		--this->pointer;
+		return *this;
+	}
+
+	MyIterator operator--(int)
+	{
+		--this->pointer;
+		return *this;
+	}
+
+	MyIterator& operator+(int num)
+	{
+		this->pointer += num;
 		return *this;
 	}
 };

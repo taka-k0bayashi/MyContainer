@@ -46,6 +46,60 @@ TEST(PlusPlus, Test2)
 	delete[] pointer;
 }
 
+TEST(MinusMinus, Test1)
+{
+	int* pointer = new int[5];
+	pointer[0] = 2;
+	pointer[1] = 3;
+	MyIterator<int> itr(&pointer[1], pointer, &pointer[5]);
+
+	EXPECT_EQ(*itr, 3);
+
+	--itr;
+
+	EXPECT_EQ(*itr, 2);
+
+	delete[] pointer;
+}
+
+TEST(MinusMinus, Test2)
+{
+	int* pointer = new int[5];
+	pointer[0] = 2;
+	pointer[1] = 3;
+	MyIterator<int> itr(&pointer[1], pointer, &pointer[5]);
+
+	EXPECT_EQ(*itr, 3);
+
+	itr--;
+
+	EXPECT_EQ(*itr, 2);
+
+	delete[] pointer;
+}
+
+TEST(Plus, Test1)
+{
+	int* pointer = new int[5];
+	for (int i = 0; i < 5; ++i)
+	{
+		pointer[i] = i + 2;
+	}
+
+	MyIterator<int> itr(pointer, pointer, &pointer[5]);
+
+	EXPECT_EQ(*itr, 2);
+
+	itr = itr + 1;
+
+	EXPECT_EQ(*itr, 3);
+
+	itr = itr + 2;
+
+	EXPECT_EQ(*itr, 5);
+
+	delete[] pointer;
+}
 
 
 class LeakChecker : public ::testing::EmptyTestEventListener
