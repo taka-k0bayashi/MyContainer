@@ -166,20 +166,24 @@ public:
 		return *(this->_MyPair.last - 1);
 	}
 
-	void resize(size_t size) 
+	void resize(size_t size, const T& value = T()) 
 	{
 		if (size <= this->size())
 		{
+			for (size_t i = 0, diff_size = this->size() - size; i < diff_size; ++i)
+			{
+				this->pop_back();
+			}
 			return;
 		}
 
 		size_t old_size = this->size();
 
-		this->reallocate(size);
+		if(size > this->capacity()) this->reallocate(size);
 
 		for (size_t i = old_size; i < size; ++i)
 		{
-			this->allocator.construct(&this->_MyPair.first[i], T());
+			this->allocator.construct(&this->_MyPair.first[i], value);
 		}
 
 		this->_MyPair.last += size - old_size;

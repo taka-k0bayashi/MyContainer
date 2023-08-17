@@ -533,6 +533,41 @@ TEST(Resize, Test2)
 	}
 }
 
+TEST(Resize, Test3)
+{
+	MyVector<int> vector(2, 5);
+
+	vector.resize(5, 11);
+
+	EXPECT_EQ(vector.size(), 5);
+	EXPECT_TRUE(vector.capacity() >= 5);
+
+	EXPECT_EQ(vector[0], 5);
+	EXPECT_EQ(vector[1], 5);
+
+	for (size_t i = 2; i < 5; ++i)
+	{
+		EXPECT_EQ(vector[i], 11);
+	}
+}
+
+TEST(Resize, Test4)
+{
+	MyVector<int> vector(5, 5);
+
+	vector.resize(2, 3);
+
+	size_t old_capacity = vector.capacity();
+
+	for (size_t i = 0; i < 2; ++i)
+	{
+		EXPECT_EQ(vector[i], 5);
+	}
+
+	EXPECT_EQ(vector.size(), 2);
+	EXPECT_TRUE(vector.capacity() == old_capacity);
+}
+
 TEST(Reserve, Test1)
 {
 	MyVector<int> vector;
