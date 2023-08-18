@@ -176,7 +176,7 @@ public:
 			}
 			return;
 		}
-
+		
 		size_t old_size = this->size();
 
 		if(size > this->capacity()) this->reallocate(size);
@@ -207,6 +207,21 @@ public:
 		}
 		
 		this->reallocate(this->size());
+	}
+
+	void assign(size_t size, const T& value)
+	{
+		size_t old_size = this->size();
+
+		if(size > this->capacity()) this->reallocate(size);
+
+		for (size_t i = 0; i < size; ++i)
+		{
+			if (i < old_size) this->allocator.destroy(&this->_MyPair.first[i]);
+			this->allocator.construct(&this->_MyPair.first[i], value);
+		}
+
+		this->_MyPair.last = this->_MyPair.first + ((old_size < size) ? size : old_size);
 	}
 
 	iterator begin() const

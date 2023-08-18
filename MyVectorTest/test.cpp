@@ -631,6 +631,42 @@ TEST(ShrinkToFit, Test3)
 	EXPECT_EQ(vector.capacity(), 9);
 }
 
+TEST(Assign, Test1)
+{
+	MyVector<int> vector(5, 6);
+
+	vector.assign(2, 3);
+
+	EXPECT_EQ(vector[0], 3);
+	EXPECT_EQ(vector[1], 3);
+
+	EXPECT_EQ(vector[2], 6);
+	EXPECT_EQ(vector[3], 6);
+	EXPECT_EQ(vector[4], 6);
+
+	EXPECT_EQ(vector.size(), 5);
+
+	EXPECT_TRUE(vector.capacity() >= 5);
+}
+
+TEST(Assign, Test2)
+{
+	MyVector<int> vector(2, 6);
+
+	vector.assign(5, 3);
+
+	EXPECT_EQ(vector[0], 3);
+	EXPECT_EQ(vector[1], 3);
+
+	EXPECT_EQ(vector[2], 3);
+	EXPECT_EQ(vector[3], 3);
+	EXPECT_EQ(vector[4], 3);
+
+	EXPECT_EQ(vector.size(), 5);
+
+	EXPECT_TRUE(vector.capacity() >= 5);
+}
+
 TEST(Iterator, Test1)
 {
 	MyVector<int> vector;
